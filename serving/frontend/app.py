@@ -16,11 +16,16 @@ st.set_page_config(
 
 SERVER_URL = "http://127.0.0.1:8000"
 
-inputs = {}
 
 # model = joblib.load("./models/diabetes_model.pkl")
-model = joblib.load("../../models/diabetes_model.pkl")
+# model = joblib.load("../../models/diabetes_model.pkl")
 # dataframe
+
+# Page header
+st.header('Diabetes progress predictions')
+
+st.subheader('Multiple patients:')
+st.text("Please upload a CSV file with the patients' information")
 
 # Upload CSV file
 csv_file = st.file_uploader("Choose a CSV file")
@@ -29,8 +34,9 @@ if csv_file:
     dataframe = pd.read_csv(csv_file, sep='\t')
     st.write(dataframe)
 
+st.subheader('Single patient:')
+st.text("Please input the patient's information")
 # Form columns
-
 col1, col2, col3 = st.beta_columns(3)
 
 AGE = col1.number_input(
@@ -69,14 +75,9 @@ S5 = col3.number_input(
     "S5", 1.0, None, value=5.0626, step=0.5
 )
 
-# Upload display image
-uploaded_file = st.file_uploader("Choose an image")
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Test image caption")
-
 
 # Model prediction
+
 if st.button("Predict diabetes progression"):  # and csv file
     if csv_file:
         # predictions = model.predict(dataframe)
@@ -92,11 +93,8 @@ if st.button("Predict diabetes progression"):  # and csv file
         predictions = json.loads(json.loads(predictions.text))
         print(type(predictions))
 
-        
-
         for pno in predictions.keys():
             st.info(f"Patient {pno} results: {predictions[pno]}")
-
     else:
         st.info("Predicting from form data.")
         url = f"{SERVER_URL}/predict?age={AGE}&sex={SEX}&bmi={BMI}&bp={BP}&s1={S1}&s2={S2}&s3={S3}&s4={S4}&s5={S5}&s6={S6}"
@@ -105,10 +103,3 @@ if st.button("Predict diabetes progression"):  # and csv file
         for i in range(10):
             st.info(f"Results: {predictions.text}")
 
-# One line text
-user_input = st.text_input(label="Label goes here")
-print(user_input)
-
-# Multiline text
-user_input = st.text_area(
-    "Your feedback on the model predictions?", "Empty feedback")

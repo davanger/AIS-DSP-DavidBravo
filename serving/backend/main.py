@@ -27,12 +27,6 @@ class DiabetesInfo(BaseModel):
 async def root():
     return {"message": "Hello World"}
 
-
-@app.get("/random_message")
-async def random_message():
-    return 4
-
-
 @app.post("/predict")
 async def predict_diabetes_progresss(age: float, sex: float, bmi: float,
                                      bp: float, s1: float, s2: float, s3:
@@ -56,11 +50,3 @@ async def predict_diabetes_progresss(patients: List[DiabetesInfo]):
     progression = json.dumps(progressions, indent = 4) 
     print(f"model input {model_input_data}")
     return progression
-
-# @app.post("/predict_obj")
-# async def predict_diabetes_progress_1(diabetes_info: DiabetesInfo):
-#     print(diabetes_info.dict())
-#     model_input_data = pd.DataFrame([diabetes_info.dict()])
-#     print(f"model input {model_input_data.to_numpy().reshape(1, -1)}")
-#     # progression = model.predict(model_input_data.to_numpy().reshape(1, -1))
-#     # return progression
